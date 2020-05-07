@@ -7,7 +7,10 @@ contient les codes utilisés pour faire des extractions simples depuis les gpick
 Calcul de la distribution de la masse dans le thalle. Attention à bien mettre le centre repéré sur ImageJ dans Distribution_masse 
 
 1. Distribution_masse.py => Sort des fichiers texte, contenant la position X et Y et la longueur de chaque segment défini par un noeud de degré 2
-1. plot_distribution_masse.py => Plot and save la distribution
+
+1. plot_distribution_masse.py => Plot and save la distribution de la meme frame pour differentes manips
+
+1. plot_distribution_masse_all.py => Plot and save toutes les  distributions de DictManip
 
 ## Comptage noeuds
 

@@ -34,7 +34,7 @@ def plot_init( fig_list):
         plt.figure( fname)
 
 def plot_close( fig_list, figname, norm_dist=0):
-    path = './FIG/mass_distribution/'
+    path = './FIG/mass_distribution/temp/'
     dir_exist( path)
 
     for fname in fig_list:
@@ -87,6 +87,8 @@ def plot_distribution_radius( fig_list, path, filename, name, norm_dist):
         radius_bins = np.linspace( 0, np.max(radius), nbins)
         DM = np.array([])
         for inc in range(nbins-1) :
+            # on sommes les masses des noeuds dans la gamme
+            # de chaque bin
             DM = np.append( DM, np.sum(f[(radius > radius_bins[inc]) & (radius < radius_bins[inc+1]),2]))
 
 
@@ -110,8 +112,8 @@ def plot_distribution_radius( fig_list, path, filename, name, norm_dist):
         fname = 'Distribution de la masse'
         plt.figure( fname)
         deltaR = np.diff( radius_bins )[0]
-        deltaS = np.pi *  deltaR*( deltaR + 2*radius_bins[1:] )
-        x,y = radius_bins[1:], DM / deltaS
+        deltaS = np.pi *  deltaR * ( deltaR + 2*radius_bins[1:] )
+        x, y = radius_bins[1:], DM / deltaS
         if norm_dist:
             x , y = pdf( x, y )
         plt.plot( x, y,  marker)
@@ -193,9 +195,6 @@ def main():
     import DictManips as DM
     import re
 
-    manips = DM.MANIPS(0)
-    names = [manips[inc]['name'] for inc in manips.keys()]
-    # names = names[0]
     fig_list = ['Distribution des distance au centre des segments'
                 ,'Distribution des longueurs des segments'
                 ,'Localisation des segments'
@@ -204,30 +203,46 @@ def main():
                 ,'Distribution angulaire de la masse']
 
 
-
     plot_init( fig_list)
+
+
+
+    ####
+    # 1 manip ou toutes les manips:       #
+    AllManip = 0
+    if AllManip:
+        manips = DM.MANIPS(0)
+        names = [manips[inc]['name'] for inc in manips.keys()]
+        # names = names[0]
+        # quelle frame utilisée ? attention une seule
+        NN = (50,)
+        print('on utilise la frame : ' + str(NN) )
+    else:
+        names = [ '2019_04_11_P_S_M2']
+        # quelle frame utilisée ?
+        NN = (5, 30, 45, 60, 75)
+        print('on utilise les frame : ' + str(NN) )
+
+    norm_dist = 1
+    print('normalisation : ' +  str(norm_dist))
 
     for name in names:
         print('\t ' + name)
         path = PARAMS( name)
         allfiles = os.listdir( path)
         files = [ fname for fname in allfiles if fname.endswith('.gpickle.txt')]
-        # quelle frame utilisée ?
-        NN = 50
-        print('on utilise la frame : ' + str(NN) )
-
-        norm_dist = 1
-        print('normalisation : ' +  str(norm_dist))
 
         for inc in range(len(files)):
             fname = files[inc]
             frame_number = np.uint(Frame_Number( fname))
-            if frame_number==NN:
+            if frame_number in NN:
                 f, radius, radius_bins, DMr = plot_distribution_radius(fig_list, path , fname, name, norm_dist)
                 f, angle, angle_bins, DMa = plot_distribution_angle(fig_list, path , fname, name, norm_dist)
 
-
-    plot_close( fig_list, str(NN), norm_dist )
+    if AllManip :
+        plot_close( fig_list, str(NN[0]), norm_dist )
+    else:
+        plot_close( fig_list, name, norm_dist )
 
 if __name__ == "__main__":
     main()

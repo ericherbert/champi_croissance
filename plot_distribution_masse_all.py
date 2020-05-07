@@ -29,7 +29,7 @@ def PARAMS( manip):
     return path
 
 
-def plot_distribution( path, filename, name):
+def plot_distribution_radius( path, filename, name):
 
     f = np.loadtxt( path + filename)
 
@@ -95,6 +95,10 @@ def plot_distribution( path, filename, name):
 
     return f, radius, radius_bins, DM
 
+
+
+
+
 def main():
     import DictManips as DM
     manips = DM.MANIPS(0)
@@ -107,7 +111,7 @@ def main():
         files = [ fname for fname in allfiles if fname.endswith('.gpickle.txt')]
 
         for inc in range(len(files)):
-            f, radius, radius_bins, DM = plot_distribution( path , files[inc], name)
+            f, radius, radius_bins, DM = plot_distribution_radius( path , files[inc], name)
 
 if __name__ == "__main__":
     main()
