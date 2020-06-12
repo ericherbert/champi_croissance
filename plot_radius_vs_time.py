@@ -71,6 +71,10 @@ def methode_max( x, y):
     critere = np.argmax(y)
     return x[critere], y[critere]
 
+def methode_activite( x, y):
+    critere = np.mean(y)
+    return x[critere], y[critere]
+
 def methode_median( x, y):
     int_y = np.cumsum( y)
     # calcul median 
@@ -114,15 +118,20 @@ def plot_temp( NN, x, methode):
 
     critere = np.argsort( x)
     x = x[critere]
+    normalize_it = 0
+    if normalize_it:
+        yy = x/np.max(x)
+    else: 
+        yy = x
     if methode == 'max':
-        plt.loglog( NN, x/np.max(x), 'or')
+        plt.loglog( NN, yy, 'or')
     elif methode == 'median':
-        plt.loglog( NN, x/np.max(x), 'sb')
+        plt.loglog( NN, yy, 'sb')
     elif methode == 'densite':
-        plt.loglog( NN, x/np.max(x), '*g')
+        plt.loglog( NN, yy, '*g')
     elif not np.isnan(methode):
         slope = methode
-        plt.loglog( NN, (x/np.max(x))**slope, '-k')
+        plt.loglog( NN, NN**slope, '-k')
 
 
 
@@ -132,8 +141,8 @@ def main():
 
     fig_list = [ 'Distribution de la masse' ]
 
-    # names = [ '2019_04_11_P_S_M2' ]
-    names = [ '2019_03_27_P_S_M0' ]
+    names = [ '2019_03_27_P_S_M0', '2019_04_11_P_S_M2' ]
+    # names = [ '2019_03_27_P_S_M0' ]
     # quelle frame utilisée ?
     NN = np.array([5, 30, 45, 60, 75])
     print('on utilise les frame : ' + str(NN) )
@@ -176,11 +185,11 @@ def main():
         plot_methode( rdensite, Mdensite, 'densite')
 
         # plt.close('temp')
-        plt.figure('temp')
+        plt.figure( name)
         plot_temp( NN, rmax, 'max')
         plot_temp( NN, rmed, 'median')
         plot_temp( NN, rdensite, 'densite')
-        plot_temp( NN, NN, 0.5)  # plot la loi de puissance selon argument numerique
+        # plot_temp( NN, NN, 0.5)  #         plot la loi de puissance selon argument numerique
 
     plt.show()
 
